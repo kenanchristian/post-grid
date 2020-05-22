@@ -104,7 +104,8 @@
   .content-grid {
     display: grid;
     grid-template-columns: repeat(3,1fr);
-    margin: 20px 0;
+    margin: 20px auto;
+    max-width: 600px;
   }
 
   .content-grid.with-gap {
@@ -118,9 +119,11 @@
   .content-item{
     display: block;
     padding-top: 100%;
-    background: #dedede;
-    background-size: contain;
     position: relative;
+    background: #dedede;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   .content-item.empty .placholder {
