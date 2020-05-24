@@ -6,8 +6,6 @@
 
 <svelte:window on:dragover|preventDefault="" on:drop|preventDefault=""></svelte:window>
 
-<Header/>
-
 <div class="app-wrapper">
   <div class="title-wrapper">
     <h2>INSTAGRAM LAYOUT</h2>

@@ -1,6 +1,7 @@
 <script>
   import Action from './Action.svelte'
   import GridItem from './GridItem.svelte'
+  import Header from './Header.svelte'
   export let showGap
   let images = []
   let swapMode = false
@@ -51,6 +52,8 @@
     images[index] = url
   }
 </script>
+
+<Header {swapMode} />
 
 {#if images.length >= 3}
   <Action on:add-row={addRow} on:toggle-swap={toggleSwapMode} {swapMode} showSwapToggle={true} rowDirection={'top'}>+ Add Row Above</Action>

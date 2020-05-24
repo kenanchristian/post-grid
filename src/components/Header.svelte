@@ -13,7 +13,7 @@
   </div>
 {/if}
 
-<style>
+<style lang="scss">
   .notice-wrapper {
     width: 100%;
     background-color: #F89727FF;
@@ -22,10 +22,10 @@
     top: 0;
     left: 0;
     right: 0;
-  }
 
-  .notice-wrapper .message-wrapper {
-    padding: 5px 0;
-    text-align: center;
+    .message-wrapper {
+      padding: 5px 0;
+      text-align: center;
+    }
   }
 </style>
