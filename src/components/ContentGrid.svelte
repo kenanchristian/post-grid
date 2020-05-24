@@ -74,15 +74,15 @@
 
 <Action on:add-row={addRow} {swapMode} rowDirection={'bottom'}>+ Add Arrow Below</Action>
 
-<style>
+<style lang="scss">
   .content-grid {
     display: grid;
     grid-template-columns: repeat(3,1fr);
     margin: 20px auto;
     max-width: 600px;
-  }
 
-  .content-grid.with-gap {
-    grid-gap: 3px;
+    &.with-gap {
+     grid-gap: 3px;
+    }
   }
 </style>

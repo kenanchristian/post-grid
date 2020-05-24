@@ -25,24 +25,26 @@
   {/if}
 </div>
 
-<style>
-  .action-wrapper .action-button {
-    background-color: black;
-    color: white;
-    box-shadow: none;
-    border-radius: 5px;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1.5rem;
-  }
+<style lang="scss">
+  .action-wrapper {
+    .action-button {
+      background-color: black;
+      color: white;
+      box-shadow: none;
+      border-radius: 5px;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1.5rem;
 
-  .action-button.add-button {
-    background-color: black;
-    color: white;
-  }
+      &.add-button {
+        background-color: black;
+        color: white;
+      }
 
-  .action-button.swap-button {
-    background-color: #F89727FF;
-    color: white;
+      &.swap-button {
+        background-color: #F89727FF;
+        color: white;
+      }
+    }
   }
 </style>

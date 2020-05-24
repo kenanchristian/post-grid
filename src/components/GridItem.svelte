@@ -77,7 +77,7 @@
 {/if}
 </div>
 
-<style>
+<style lang="scss">
   .content-file-loader {
     display: none;
   }
@@ -88,25 +88,27 @@
     position: relative;
   }
 
-  .content-image-wrapper .swap-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255,255,255,.6);
-    pointer-events: none;
-  }
-
-  .content-image-wrapper.swap-item .swap-overlay {
-    display: flex
-  }
-
   .content-image-wrapper {
-    position: relative
+    position: relative;
+
+    .swap-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255,255,255,.6);
+      pointer-events: none;
+    }
+
+    &.swap-item {
+      .swap-overlay {
+        display: flex
+      }
+    }
   }
 
   .content-placeholder {
@@ -117,23 +119,19 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+
+    .placeholder-text {
+      position: absolute;
+      top:  50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      h4 {
+        font-size: 1.5rem;
+        color: #222;
+        text-transform: uppercase;
+      }
+    }
   }
 
-  .content-placeholder .placeholder-text {
-    opacity: 1;
-  }
-
-  .placeholder-text {
-    position: absolute;
-    top:  50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-  }
-
-  .placeholder-text h4 {
-    font-size: 1.5rem;
-    color: #222;
-    text-transform: uppercase;
-  }
 </style>
