@@ -16,7 +16,7 @@
   <ContentGrid {showGap}></ContentGrid>
 </div>
 
-<style>
+<style lang="scss">
   .app-wrapper {
     height: 100vh;
     width: 100%;

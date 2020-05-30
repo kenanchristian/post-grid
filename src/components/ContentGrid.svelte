@@ -2,11 +2,15 @@
   import Action from './Action.svelte'
   import GridItem from './GridItem.svelte'
   import Header from './Header.svelte'
+  import ImageCropper from './ImageCropper.svelte'
+
   export let showGap
+
   let images = []
   let swapMode = false
   let swapOrigin = null
   let swapTarget = null
+  let image = null
 
 
   function addRow(event) {
@@ -50,10 +54,15 @@
   function addImage(event) {
     const { detail: { url, index } }= event
     images[index] = url
+    // image = url
   }
 </script>
 
 <Header {swapMode} />
+
+{#if image}
+  <ImageCropper {image} />
+{/if}
 
 {#if images.length >= 3}
   <Action on:add-row={addRow} on:toggle-swap={toggleSwapMode} {swapMode} showSwapToggle={true} rowDirection={'top'}>+ Add Row Above</Action>
