@@ -29,7 +29,7 @@
     </button>
   {/if}
   {#if showSwapToggle && swapMode}
-    <button class="action-button swap-button" on:click|preventDefault="{(event) => { cancelSwap(event) }}">{swapMode ? 'Cancel Swap' : 'Swap Image'}</button>
+    <button class="action-button swap-button" on:click|preventDefault="{(event) => { cancelSwap(event) }}">Cancel Swap</button>
   {/if}
 </div>
 
@@ -44,7 +44,6 @@
 
       &.swap-button {
         background-color: #F89727FF;
-        font-size: 3rem;
         color: white;
       }
 
