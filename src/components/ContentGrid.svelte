@@ -3,6 +3,7 @@
   import GridItem from './GridItem.svelte'
   import Header from './Header.svelte'
   import ImageCropper from './ImageCropper.svelte'
+  // import InstagramConnect from './InstagramConnect.svelte'
 
   export let showGap
 
@@ -98,6 +99,8 @@
 </div>
 
 <Action on:add-row={addRow} {swapMode} rowDirection={'bottom'}></Action>
+
+<!-- <InstagramConnect /> -->
 
 <style lang="scss">
   .content-grid {
