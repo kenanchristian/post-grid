@@ -44,6 +44,7 @@
 
       &.swap-button {
         background-color: #F89727FF;
+        font-size: 3rem;
         color: white;
       }
 
