@@ -34,16 +34,14 @@
   }
 
   function onFileDrop(event, index) {
-    if(event.dataTransfer) {
-      event.currentTarget.classList.remove("file-over")
-    }
     const file = event.dataTransfer ? event.dataTransfer.files[0] : event.target.files[0]
-    if(file){
+    if (file) {
       const fileReader = new FileReader()
       fileReader.onload= (event) => {
         dispatch('add-image', {
           url: event.target.result,
-          index
+          index,
+          type: file.type
         })
       }
 

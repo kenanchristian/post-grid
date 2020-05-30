@@ -67,16 +67,29 @@
   }
 
   function addImage(event) {
-    const { detail: { url, index } }= event
-    images[index] = url
-    // image = url
+    const { detail: { url, index, type } }= event
+    image = {
+      type,
+      url,
+      index
+    }
+  }
+
+  function dismissCrop(event) {
+    image = null
+  }
+
+  function completeCrop(event) {
+    const { detail: { croppedImage, index} } = event
+    images[index] = croppedImage
+    dismissCrop()
   }
 </script>
 
 <Header {swapMode} />
 
 {#if image}
-  <ImageCropper {image} />
+  <ImageCropper {image} on:dismiss-crop={dismissCrop} on:complete-crop={completeCrop} />
 {/if}
 
 {#if images.length >= 3}

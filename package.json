@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "author": "kenanchristian",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rimraf public/build && rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public",
     "deploy": "yarn build && firebase deploy"
