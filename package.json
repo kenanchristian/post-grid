@@ -16,6 +16,7 @@
     "autoprefixer": "^9.8.0",
     "eslint": "^7.1.0",
     "eslint-plugin-svelte3": "^2.7.3",
+    "fa-svelte": "^3.1.0",
     "postcss": "^7.0.31",
     "postcss-load-config": "^2.1.0",
     "prettier": "^2.0.5",
@@ -31,6 +32,7 @@
     "svelte-preprocess": "^3.7.4"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "sirv-cli": "^0.4.4",
     "svelte-easy-crop": "^1.0.3"
   }

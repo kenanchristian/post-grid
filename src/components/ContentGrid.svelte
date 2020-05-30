@@ -10,7 +10,16 @@
   let swapMode = false
   let swapOrigin = null
   let swapTarget = null
+  let selectedImageIndex = null
   let image = null
+
+  $: {
+    if(swapOrigin !== null || swapTarget !== null){
+      swapMode = true
+    }else{
+      swapMode = false
+    }
+  }
 
 
   function addRow(event) {
@@ -26,17 +35,15 @@
     images = new Array(images.length).fill(null)
   }
 
-  function toggleSwapMode(event) {
-    swapMode = !swapMode
-
-    if(!swapMode) {
-      swapOrigin = null
-      swapTarget = null
-    }
+  function clearSwap(payload) {
+    swapOrigin = null
+    swapTarget = null
   }
 
   function swapImage(payload) {
     const { detail: { index } } = payload
+    selectedImageIndex = null
+
     if(swapOrigin === null) {
       swapOrigin = index
     } else if(swapOrigin === index) {
@@ -45,10 +52,17 @@
       let tempImage = images[swapOrigin]
       images[swapOrigin] = images[index]
       images[index] = tempImage
-      swapMode = false
-      swapOrigin = null
-      swapTarget = null
+      clearSwap()
     }
+  }
+
+  function selectImage(payload) {
+     const { detail : { index }} = payload
+     if (selectedImageIndex === index) {
+       selectedImageIndex = null
+     }else{
+       selectedImageIndex = index
+     }
   }
 
   function addImage(event) {
@@ -65,23 +79,25 @@
 {/if}
 
 {#if images.length >= 3}
-  <Action on:add-row={addRow} on:toggle-swap={toggleSwapMode} {swapMode} showSwapToggle={true} rowDirection={'top'}>+ Add Row Above</Action>
+  <Action on:add-row={addRow} {swapMode} showSwapToggle={true} on:cancel-swap={(event) => clearSwap(event) } rowDirection={'top'}></Action>
 {/if}
 
 <div class="content-grid" class:with-gap="{showGap}">
   {#each images as imageUrl, index}
     <GridItem
-      {swapMode}
       {imageUrl}
       {index}
+      {swapMode}
       on:add-image={addImage}
       on:swap-image={swapImage}
+      on:select-image={selectImage}
       highlighted={swapTarget === index || swapOrigin === index}
+      selected={selectedImageIndex === index}
       ></GridItem>
   {/each}
 </div>
 
-<Action on:add-row={addRow} {swapMode} rowDirection={'bottom'}>+ Add Arrow Below</Action>
+<Action on:add-row={addRow} {swapMode} rowDirection={'bottom'}></Action>
 
 <style lang="scss">
   .content-grid {

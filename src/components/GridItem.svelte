@@ -1,10 +1,15 @@
 <script>
   import { createEventDispatcher } from 'svelte'
   import { slide } from 'svelte/transition'
+  import Icon from 'fa-svelte'
+  import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck'
+  import { faSync } from '@fortawesome/free-solid-svg-icons/faSync'
+  import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
 
   export let imageUrl
   export let index
   export let highlighted
+  export let selected
   export let swapMode
 
   let fileLoader
@@ -51,6 +56,12 @@
       fileLoader.click()
     }
   }
+
+  function selectImage(event, index) {
+    dispatch('select-image', {
+      index: index
+    })
+  }
 </script>
 
 <div transition:slide|local class="content-item-wrapper">
@@ -68,10 +79,20 @@
     </div>
   </div>
 {:else}
-  <div class="content-image-wrapper" class:swap-item={highlighted} >
-    <img src={imageUrl} class="content-image" alt={index} on:click|preventDefault="{(event) => { swapMode ? swapImage(event, index) : openFileLoader(event, index) }}"/>
-    <div class="swap-overlay">
-      ✔️
+  <div class="content-image-wrapper" class:swap-item={highlighted} class:selected={selected} >
+    <img src={imageUrl} class="content-image" alt={index} on:click|preventDefault="{(event) => { swapMode ? swapImage(event, index) : selectImage(event, index) }}"/>
+    <div class="overlay">
+      <div class="swap-overlay">
+        <Icon icon={faCheck}/>
+      </div>
+      <div class="action-overlay" on:click|preventDefault="{(event) => { selectImage(event, index) }}">
+        <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => openFileLoader(event, index)}">
+          <Icon class="action-button-icon" icon={faPlus}/>
+        </div>
+        <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => swapImage(event, index)}">
+          <Icon class="action-button-icon" icon={faSync}/>
+        </div>
+      </div>
     </div>
   </div>
 {/if}
@@ -91,24 +112,67 @@
   .content-image-wrapper {
     position: relative;
 
-    .swap-overlay {
+    .overlay {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      display: none;
       align-items: center;
       justify-content: center;
-      background-color: rgba(255,255,255,.6);
-      pointer-events: none;
-    }
+      display: none;
 
-    &.swap-item {
+      .action-overlay, .swap-overlay {
+        height: 100%;
+        display: none;
+        font-size: 2rem;
+        align-items: center;
+        justify-content: space-evenly;
+      }
+
+      .action-overlay {
+        background-color:#3577CE8C;
+
+        .action-button {
+          :global(.action-button-icon) {
+            color: white;
+          }
+        }
+      }
+
       .swap-overlay {
-        display: flex
+        background-color: rgba(255,255,255,.6);
       }
     }
+
+    &.selected {
+      .overlay {
+        display: unset;
+        .action-overlay {
+          display: flex;
+        }
+
+        .swap-overlay {
+          display: none
+        }
+      }
+    }
+
+
+    &.swap-item {
+      .overlay {
+        display: unset;
+
+        .swap-overlay {
+          display: flex
+        }
+
+        .action-overlay {
+          display: none
+        }
+      }
+    }
+
   }
 
   .content-placeholder {
