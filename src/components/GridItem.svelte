@@ -5,6 +5,7 @@
   import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck'
   import { faSync } from '@fortawesome/free-solid-svg-icons/faSync'
   import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
+  import { faDownload } from '@fortawesome/free-solid-svg-icons/faDownload'
 
   export let imageUrl
   export let index
@@ -19,6 +20,15 @@
     dispatch('swap-image', {
       index: i
     })
+  }
+
+  function downloadImage(event) {
+    const linkEl = document.createElement('a')
+    linkEl.href = imageUrl
+    const filename = imageUrl.match(/^data:image\/(.*);/)[1]
+    linkEl.download = `image.${filename}`
+    linkEl.click()
+    return true
   }
 
   function onDragEnter(event) {
@@ -63,7 +73,7 @@
 </script>
 
 <div transition:slide|local class="content-item-wrapper">
-  <input bind:this={fileLoader} class="content-file-loader" type="file" on:change="{(event) => {onFileDrop(event, index)}}">
+  <input bind:this={fileLoader} class="content-file-loader" type="file" on:change="{(event) => {onFileDrop(event, index)}}" accept="image/*">
 {#if imageUrl === null}
   <div class="content-placeholder empty"
     on:dragenter|preventDefault="{(event) => {onDragEnter(event, index)}}"
@@ -89,6 +99,9 @@
         </div>
         <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => swapImage(event, index)}">
           <Icon class="action-button-icon" icon={faSync}/>
+        </div>
+        <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => downloadImage(event, index)}">
+          <Icon class="action-button-icon" icon={faDownload}/>
         </div>
       </div>
     </div>
