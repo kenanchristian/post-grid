@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset='utf-8'>
-	<meta name='viewport' content='width=device-width,initial-scale=1'>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <meta name="theme-color" content="#ffffff"/>
 
-	<title>Insta Layout</title>
+  <link rel="manifest" href="manifest.json">
+  <title>PostGrid</title>
 
-	<link rel='icon' type='image/png' href='/favicon.png'>
-	<link rel='stylesheet' href='/build/global.css'>
-	<link rel='stylesheet' href='/build/bundle.css'>
+  <link rel='icon' type='image/png' href='/images/icons/icon-72x72.png'>
 
-	<script defer src='/build/bundle.js'></script>
+  <link rel='stylesheet' href='/build/global.css'>
+  <link rel='stylesheet' href='/build/bundle.css'>
+
+  <script defer src='/build/bundle.js'></script>
+  <script>
+    if('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(function() {
+              console.log('Service Worker Registered');
+        });
+    }
+  </script>
 </head>
 
 <body>
