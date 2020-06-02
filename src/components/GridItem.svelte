@@ -202,7 +202,6 @@
       transform: translate(-50%, -50%);
 
       h4 {
-        font-size: 1.5rem;
         color: #222;
         text-transform: uppercase;
       }

@@ -3,11 +3,11 @@
   import GridItem from './GridItem.svelte'
   import Header from './Header.svelte'
   import ImageCropper from './ImageCropper.svelte'
-  // import InstagramConnect from './InstagramConnect.svelte'
+  import InstagramConnect from './InstagramConnect.svelte'
 
-  export let showGap
+  let showGap = true
 
-  let images = []
+  let images = [null, null, null]
   let swapMode = false
   let swapOrigin = null
   let swapTarget = null
@@ -88,13 +88,17 @@
 
 <Header {swapMode} />
 
+<div class="grid-option-wrapper">
+  <label>
+    <input type="checkbox" bind:checked={showGap}/> Show Post Gap?
+  </label>
+</div>
+
 {#if image}
   <ImageCropper {image} on:dismiss-crop={dismissCrop} on:complete-crop={completeCrop} />
 {/if}
 
-{#if images.length >= 3}
-  <Action on:add-row={addRow} {swapMode} showSwapToggle={true} on:cancel-swap={(event) => clearSwap(event) } rowDirection={'top'}></Action>
-{/if}
+<Action on:add-row={addRow} {swapMode} showSwapToggle={true} on:cancel-swap={(event) => clearSwap(event) } rowDirection={'top'}></Action>
 
 <div class="content-grid" class:with-gap="{showGap}">
   {#each images as imageUrl, index}
@@ -111,15 +115,20 @@
   {/each}
 </div>
 
-<Action on:add-row={addRow} {swapMode} rowDirection={'bottom'}></Action>
+{#if images.length >= 3}
+  <Action on:add-row={addRow} {swapMode} rowDirection={'bottom'}></Action>
+{/if}
 
-<!-- <InstagramConnect /> -->
+<InstagramConnect />
 
 <style lang="scss">
+  .grid-option-wrapper {
+    margin-bottom: 10px;
+  }
   .content-grid {
     display: grid;
     grid-template-columns: repeat(3,1fr);
-    margin: 20px auto;
+    margin: 20px auto 20px auto;
     max-width: 600px;
 
     &.with-gap {

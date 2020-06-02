@@ -10,13 +10,13 @@
   </p>
   <button class="connect-button">
     <Icon class="icon" icon={faInstagram}></Icon>
-    Connect to Instagram
+    Connect Instagram
   </button>
 </div>
 
 <style lang="scss">
   .content-wrapper {
-    margin: 20px 40px 0px 40px;
+    margin: 10px 40px 0px 40px;
     border-top: 1px solid #dedede;
     padding: 10px;
 
