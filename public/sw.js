@@ -1,6 +1,5 @@
-const cacheName = 'hello-world-page';
+const CACHE_NAME = 'post-grid-v3';
 const filesToCache = [
-  '/',
   '/index.html',
   '/build/bundle.css',
   '/build/bundle.js'
@@ -9,7 +8,7 @@ const filesToCache = [
 self.addEventListener('install', function(e) {
   console.log('[ServiceWorker] Install');
   e.waitUntil(
-    caches.open(cacheName).then(function(cache) {
+    caches.open(CACHE_NAME).then(function(cache) {
       console.log('[ServiceWorker] Caching app shell');
       return cache.addAll(filesToCache);
     })
@@ -17,7 +16,18 @@ self.addEventListener('install', function(e) {
 });
 
 self.addEventListener('activate',  event => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      console.log(cacheNames)
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (CACHE_NAME !== cacheName &&  cacheName.startsWith("post-grid")) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
 });
 
 self.addEventListener('fetch', event => {

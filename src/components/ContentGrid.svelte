@@ -119,7 +119,7 @@
   <Action on:add-row={addRow} {swapMode} rowDirection={'bottom'}></Action>
 {/if}
 
-<InstagramConnect />
+<!-- <InstagramConnect /> -->
 
 <style lang="scss">
   .grid-option-wrapper {
