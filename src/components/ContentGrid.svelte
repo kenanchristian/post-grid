@@ -1,11 +1,11 @@
 <script>
+  import Header from './Header.svelte'
+  import GridOption from './GridOption.svelte'
+  import ImageCropper from './ImageCropper.svelte'
   import Action from './Action.svelte'
   import GridItem from './GridItem.svelte'
-  import Header from './Header.svelte'
-  import ImageCropper from './ImageCropper.svelte'
   import InstagramConnect from './InstagramConnect.svelte'
   import { images } from '../store/images'
-  import { history } from '../store/history'
 
   let showGap = true
 
@@ -66,18 +66,14 @@
     dismissCrop()
   }
 
+  function setShowGap(event) {
+    const { detail: { showGap: updatedValue }} = event
+    showGap = updatedValue
+  }
 </script>
 
 <Header {swapMode} />
-
-<div class="grid-option-wrapper">
-  <button disabled={ $history.currentIndex < 0 } on:click="{ history.undo }">Undo</button>
-  <button disabled={ $history.currentIndex === $history.states.length-1 } on:click="{ history.redo }">Redo</button>
-  <label>
-    <input type="checkbox" bind:checked={showGap}/> Show Post Gap?
-  </label>
-</div>
-
+<GridOption on:toggle-show-gap={setShowGap} {showGap}></GridOption>
 {#if image}
   <ImageCropper {image} on:dismiss-crop={dismissCrop} on:complete-crop={completeCrop} />
 {/if}
@@ -105,9 +101,6 @@
 <!-- <InstagramConnect /> -->
 
 <style lang="scss">
-  .grid-option-wrapper {
-    margin-bottom: 10px;
-  }
   .content-grid {
     display: grid;
     grid-template-columns: repeat(3,1fr);
