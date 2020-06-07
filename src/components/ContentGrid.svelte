@@ -4,7 +4,8 @@
   import Header from './Header.svelte'
   import ImageCropper from './ImageCropper.svelte'
   import InstagramConnect from './InstagramConnect.svelte'
-  import { imagesStore } from '../store/images'
+  import { images } from '../store/images'
+  import { history } from '../store/history'
 
   let showGap = true
 
@@ -34,7 +35,7 @@
     } else if(swapOrigin === id) {
       swapOrigin = null
     } else {
-      imagesStore.swapImage(swapOrigin, id)
+      images.swapImage(swapOrigin, id)
       clearSwap()
     }
   }
@@ -59,7 +60,7 @@
 
   function completeCrop(event) {
     const { detail: { image } } = event
-    imagesStore.storeImage({
+    images.storeImage({
       ...image
     })
     dismissCrop()
@@ -70,6 +71,8 @@
 <Header {swapMode} />
 
 <div class="grid-option-wrapper">
+  <button disabled={ $history.currentIndex < 0 } on:click="{ history.undo }">Undo</button>
+  <button disabled={ $history.currentIndex === $history.states.length-1 } on:click="{ history.redo }">Redo</button>
   <label>
     <input type="checkbox" bind:checked={showGap}/> Show Post Gap?
   </label>
@@ -79,10 +82,10 @@
   <ImageCropper {image} on:dismiss-crop={dismissCrop} on:complete-crop={completeCrop} />
 {/if}
 
-<Action on:add-row={imagesStore.addRow} {swapMode} showSwapToggle={true} on:cancel-swap={(event) => clearSwap(event) } rowDirection={'top'}></Action>
+<Action on:add-row={images.addRow} {swapMode} showSwapToggle={true} on:cancel-swap={(event) => clearSwap(event) } rowDirection={'top'}></Action>
 
 <div class="content-grid" class:with-gap="{showGap}">
-  {#each $imagesStore as image (image.id)}
+  {#each $images as image (image.id)}
     <GridItem
       {image}
       {swapMode}
@@ -95,8 +98,8 @@
   {/each}
 </div>
 
-{#if $imagesStore.length >= 3}
-  <Action on:add-row={imagesStore.addRow} {swapMode} rowDirection={'bottom'}></Action>
+{#if $images.length >= 3}
+  <Action on:add-row={images.addRow} {swapMode} rowDirection={'bottom'}></Action>
 {/if}
 
 <!-- <InstagramConnect /> -->

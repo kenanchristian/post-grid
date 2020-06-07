@@ -1,8 +1,9 @@
 import { writable } from 'svelte/store';
 import nanoid from 'nanoid-esm';
+import { history } from './history'
 
 
-function createImagesStore() {
+function createImages() {
 	const { subscribe, set, update } = writable([...generateNewRow()]);
 
 	return {
@@ -14,6 +15,8 @@ function createImagesStore() {
       }else{
         update(n => [...n, ...generateNewRow()])
       }
+
+      history.addState()
     },
     swapImage: (originId, targetId) => {
       update(images => {
@@ -25,6 +28,7 @@ function createImagesStore() {
 
         return images
       })
+      history.addState()
     },
     storeImage: (imageData) => {
       update(images => {
@@ -35,8 +39,15 @@ function createImagesStore() {
 
         return images
       })
+      history.addState()
     },
-		reset: () => { set([...generateNewRow()])}
+		reset: () => {
+      set([...generateNewRow()])
+      history.addState()
+    },
+    setState: (newState) => {
+      set(newState)
+    }
 	};
 }
 
@@ -50,4 +61,4 @@ function generateNewRow() {
   }))
 }
 
-export const imagesStore = createImagesStore();
+export const images = createImages();
