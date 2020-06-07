@@ -6,9 +6,9 @@
   import { faSync } from '@fortawesome/free-solid-svg-icons/faSync'
   import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
   import { faDownload } from '@fortawesome/free-solid-svg-icons/faDownload'
+  import { faShare } from '@fortawesome/free-solid-svg-icons/faShare'
 
-  export let imageUrl
-  export let index
+  export let image
   export let highlighted
   export let selected
   export let swapMode
@@ -18,14 +18,14 @@
 
   function swapImage(event, i) {
     dispatch('swap-image', {
-      index: i
+      id: i
     })
   }
 
   function downloadImage(event) {
     const linkEl = document.createElement('a')
-    linkEl.href = imageUrl
-    const filename = imageUrl.match(/^data:image\/(.*);/)[1]
+    linkEl.href = image.modifiedData
+    const filename = image.modifiedData.match(/^data:image\/(.*);/)[1]
     linkEl.download = `image.${filename}`
     linkEl.click()
     return true
@@ -43,15 +43,16 @@
     event.currentTarget.classList.remove("file-over")
   }
 
-  function onFileDrop(event, index) {
+  function onFileDrop(event, id) {
     const file = event.dataTransfer ? event.dataTransfer.files[0] : event.target.files[0]
     if (file) {
       const fileReader = new FileReader()
       fileReader.onload= (event) => {
         dispatch('add-image', {
-          url: event.target.result,
-          index,
-          type: file.type
+          id,
+          data: event.target.result,
+          type: file.type,
+          file: file
         })
       }
 
@@ -59,28 +60,39 @@
     }
   }
 
-  function openFileLoader(event, index) {
+  function openFileLoader(event) {
     if(!swapMode) {
       fileLoader.click()
     }
   }
 
-  function selectImage(event, index) {
+  function selectImage(event, id) {
     dispatch('select-image', {
-      index: index
+      id
     })
   }
+
+
+  function shareImage(event, id) {
+    const filesArr = []
+    if(navigator.canShare && navigator.canShare({ files: filesArr })) {
+      navigator.share({
+        files: filesArr
+      })
+    }
+  }
+
 </script>
 
 <div transition:slide|local class="content-item-wrapper">
-  <input bind:this={fileLoader} class="content-file-loader" type="file" on:change="{(event) => {onFileDrop(event, index)}}" accept="image/*">
-{#if imageUrl === null}
+  <input bind:this={fileLoader} class="content-file-loader" type="file" on:change="{(event) => {onFileDrop(event, image.id)}}" accept="image/*">
+{#if !image.modifiedData}
   <div class="content-placeholder empty"
-    on:dragenter|preventDefault="{(event) => {onDragEnter(event, index)}}"
-    on:dragleave|preventDefault="{(event) => {onDragEnd(event, index)}}"
-    on:dragover|preventDefault="{(event) => {onDragOver(event, index)}}"
-    on:drop|preventDefault="{(event) => {onFileDrop(event, index)}}"
-    on:click|preventDefault="{(event) => {openFileLoader(event, index)}}"
+    on:dragenter|preventDefault="{(event) => {onDragEnter(event, image.id)}}"
+    on:dragleave|preventDefault="{(event) => {onDragEnd(event, image.id)}}"
+    on:dragover|preventDefault="{(event) => {onDragOver(event, image.id)}}"
+    on:drop|preventDefault="{(event) => {onFileDrop(event, image.id)}}"
+    on:click|preventDefault="{(event) => {openFileLoader(event, image.id)}}"
   >
     <div class="placeholder-text">
       <h4>add Picture</h4>
@@ -88,21 +100,26 @@
   </div>
 {:else}
   <div class="content-image-wrapper" class:swap-item={highlighted} class:selected={selected} >
-    <img src={imageUrl} class="content-image" alt={index} on:click|preventDefault="{(event) => { swapMode ? swapImage(event, index) : selectImage(event, index) }}"/>
+    <img src={image.modifiedData} class="content-image" alt={image.id} on:click|preventDefault="{(event) => { swapMode ? swapImage(event, image.id) : selectImage(event, image.id) }}"/>
     <div class="overlay">
       <div class="swap-overlay">
         <Icon icon={faCheck}/>
       </div>
-      <div class="action-overlay" on:click|preventDefault="{(event) => { selectImage(event, index) }}">
-        <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => openFileLoader(event, index)}">
+      <div class="action-overlay" on:click|preventDefault="{(event) => { selectImage(event, image.id) }}">
+        <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => openFileLoader(event, image.id)}">
           <Icon class="action-button-icon" icon={faPlus}/>
         </div>
-        <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => swapImage(event, index)}">
+        <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => swapImage(event, image.id)}">
           <Icon class="action-button-icon" icon={faSync}/>
         </div>
-        <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => downloadImage(event, index)}">
+        <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => downloadImage(event, image.id)}">
           <Icon class="action-button-icon" icon={faDownload}/>
         </div>
+        {#if navigator.share}
+          <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => shareImage(event, image.id)}">
+            <Icon class="action-button-icon" icon={faShare}/>
+          </div>
+        {/if}
       </div>
     </div>
   </div>
@@ -147,6 +164,7 @@
         .action-button {
           :global(.action-button-icon) {
             color: white;
+            font-size: 1.2rem;
           }
         }
       }

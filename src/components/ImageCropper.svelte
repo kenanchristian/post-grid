@@ -5,9 +5,11 @@
   const dispatch = createEventDispatcher();
 
   export let image = {
-    url: null,
-    index: null,
-    type: null
+    data: null,
+    id: null,
+    type: null,
+    file: null,
+    modifiedData: null
   }
 
   let crop = { x: 0, y: 0 };
@@ -47,13 +49,12 @@
     const context = canvas.getContext("2d")
     const imageEl = document.createElement("img")
 
-    imageEl.setAttribute('src', image.url)
+    imageEl.setAttribute('src', image.data)
     context.drawImage(imageEl, x, y, width, height, 0, 0, width, height)
     const base64Source = canvas.toDataURL(image.type, 1)
-
+    image.modifiedData = base64Source
     dispatch('complete-crop', {
-      croppedImage: base64Source,
-      index: image.index
+      image
     })
   }
 </script>
@@ -62,7 +63,7 @@
   <div class="cropper-modal">
     <div class="cropper-wrapper">
         <Cropper
-          image={image.url}
+          image={image.data}
           bind:crop
           bind:zoom
           bind:aspect

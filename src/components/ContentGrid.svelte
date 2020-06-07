@@ -4,75 +4,53 @@
   import Header from './Header.svelte'
   import ImageCropper from './ImageCropper.svelte'
   import InstagramConnect from './InstagramConnect.svelte'
+  import { imagesStore } from '../store/images'
 
   let showGap = true
 
-  let images = [null, null, null]
   let swapMode = false
   let swapOrigin = null
-  let swapTarget = null
-  let selectedImageIndex = null
+  let selectedImageId = null
   let image = null
 
   $: {
-    if(swapOrigin !== null || swapTarget !== null){
+    if(swapOrigin !== null){
       swapMode = true
     }else{
       swapMode = false
     }
   }
 
-
-  function addRow(event) {
-    const { detail: {direction}} = event
-    if(direction === "top") {
-      images = [null, null, null, ...images]
-    } else {
-      images = [...images, null, null, null]
-    }
-  }
-
-  function resetGrid() {
-    images = new Array(images.length).fill(null)
-  }
-
   function clearSwap(payload) {
     swapOrigin = null
-    swapTarget = null
   }
 
   function swapImage(payload) {
-    const { detail: { index } } = payload
-    selectedImageIndex = null
+    const { detail: { id } } = payload
+    selectedImageId = null
 
     if(swapOrigin === null) {
-      swapOrigin = index
-    } else if(swapOrigin === index) {
+      swapOrigin = id
+    } else if(swapOrigin === id) {
       swapOrigin = null
     } else {
-      let tempImage = images[swapOrigin]
-      images[swapOrigin] = images[index]
-      images[index] = tempImage
+      imagesStore.swapImage(swapOrigin, id)
       clearSwap()
     }
   }
 
   function selectImage(payload) {
-     const { detail : { index }} = payload
-     if (selectedImageIndex === index) {
-       selectedImageIndex = null
+     const { detail : { id }} = payload
+     if (selectedImageId === id) {
+       selectedImageId = null
      }else{
-       selectedImageIndex = index
+       selectedImageId = id
      }
   }
 
   function addImage(event) {
-    const { detail: { url, index, type } }= event
-    image = {
-      type,
-      url,
-      index
-    }
+    const { detail }= event
+    image = detail
   }
 
   function dismissCrop(event) {
@@ -80,10 +58,13 @@
   }
 
   function completeCrop(event) {
-    const { detail: { croppedImage, index} } = event
-    images[index] = croppedImage
+    const { detail: { image } } = event
+    imagesStore.storeImage({
+      ...image
+    })
     dismissCrop()
   }
+
 </script>
 
 <Header {swapMode} />
@@ -98,25 +79,24 @@
   <ImageCropper {image} on:dismiss-crop={dismissCrop} on:complete-crop={completeCrop} />
 {/if}
 
-<Action on:add-row={addRow} {swapMode} showSwapToggle={true} on:cancel-swap={(event) => clearSwap(event) } rowDirection={'top'}></Action>
+<Action on:add-row={imagesStore.addRow} {swapMode} showSwapToggle={true} on:cancel-swap={(event) => clearSwap(event) } rowDirection={'top'}></Action>
 
 <div class="content-grid" class:with-gap="{showGap}">
-  {#each images as imageUrl, index}
+  {#each $imagesStore as image (image.id)}
     <GridItem
-      {imageUrl}
-      {index}
+      {image}
       {swapMode}
       on:add-image={addImage}
       on:swap-image={swapImage}
       on:select-image={selectImage}
-      highlighted={swapTarget === index || swapOrigin === index}
-      selected={selectedImageIndex === index}
+      highlighted={swapOrigin === image.id}
+      selected={selectedImageId === image.id}
       ></GridItem>
   {/each}
 </div>
 
-{#if images.length >= 3}
-  <Action on:add-row={addRow} {swapMode} rowDirection={'bottom'}></Action>
+{#if $imagesStore.length >= 3}
+  <Action on:add-row={imagesStore.addRow} {swapMode} rowDirection={'bottom'}></Action>
 {/if}
 
 <!-- <InstagramConnect /> -->
