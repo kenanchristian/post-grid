@@ -8,6 +8,8 @@
   import { faDownload } from '@fortawesome/free-solid-svg-icons/faDownload'
   import { faShare } from '@fortawesome/free-solid-svg-icons/faShare'
 
+  import { images } from '../store/images'
+
   export let image
   export let highlighted
   export let selected
@@ -74,7 +76,8 @@
 
 
   function shareImage(event, id) {
-    const filesArr = []
+    const selectedImage = $images.find((image) => image.id === id)
+    const filesArr = [selectedImage.file]
     if(navigator.canShare && navigator.canShare({ files: filesArr })) {
       navigator.share({
         files: filesArr
@@ -106,19 +109,19 @@
         <Icon icon={faCheck}/>
       </div>
       <div class="action-overlay" on:click|preventDefault="{(event) => { selectImage(event, image.id) }}">
-        <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => openFileLoader(event, image.id)}">
+        <button class="action-button" on:click|preventDefault|stopPropagation="{(event) => openFileLoader(event, image.id)}">
           <Icon class="action-button-icon" icon={faPlus}/>
-        </div>
-        <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => swapImage(event, image.id)}">
+        </button>
+        <button class="action-button" on:click|preventDefault|stopPropagation="{(event) => swapImage(event, image.id)}">
           <Icon class="action-button-icon" icon={faSync}/>
-        </div>
-        <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => downloadImage(event, image.id)}">
+        </button>
+        <button class="action-button" on:click|preventDefault|stopPropagation="{(event) => downloadImage(event, image.id)}">
           <Icon class="action-button-icon" icon={faDownload}/>
-        </div>
+        </button>
         {#if navigator.share}
-          <div class="action-button" on:click|preventDefault|stopPropagation="{(event) => shareImage(event, image.id)}">
+          <button class="action-button" on:click|preventDefault|stopPropagation="{(event) => shareImage(event, image.id)}">
             <Icon class="action-button-icon" icon={faShare}/>
-          </div>
+          </button>
         {/if}
       </div>
     </div>
@@ -159,9 +162,14 @@
       }
 
       .action-overlay {
+        padding: 15px;
         background-color:#3577CE8C;
+        grid-template-columns: repeat(2,1fr);
 
         .action-button {
+          border:none;
+          background: transparent;
+
           :global(.action-button-icon) {
             color: white;
             font-size: 1.2rem;
@@ -178,7 +186,7 @@
       .overlay {
         display: unset;
         .action-overlay {
-          display: flex;
+          display: grid;
         }
 
         .swap-overlay {

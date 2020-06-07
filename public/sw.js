@@ -1,4 +1,4 @@
-const CACHE_NAME = 'post-grid-v3';
+const CACHE_NAME = 'post-grid-v4';
 const filesToCache = [
   '/index.html',
   '/build/bundle.css',
